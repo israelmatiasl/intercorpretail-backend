@@ -43,21 +43,21 @@ public class ICustomerServiceImpl implements ICustomerService {
 
     @Override
     public KpiDto getKpi() {
-        var customersAges = customerRepository.findAll().stream().map(Customer::getAge).collect(Collectors.toList());
-        var average = getAverage(customersAges);
-        var standardDerivation = getStandardDerivation(customersAges, average);
+        List<Integer> customersAges = customerRepository.findAll().stream().map(Customer::getAge).collect(Collectors.toList());
+        double average = getAverage(customersAges);
+        double standardDerivation = getStandardDerivation(customersAges, average);
 
         return new KpiDto(average, standardDerivation);
     }
 
     private double getAverage(List<Integer> ages) {
-        var sumTerms = ages.stream().mapToInt(Integer::intValue).sum();
+        Integer sumTerms = ages.stream().mapToInt(Integer::intValue).sum();
         return (double)(sumTerms/ages.size());
     }
 
     private double getStandardDerivation(List<Integer> ages, double average) {
-        var sumTerms = ages.stream().map(age -> Math.pow((age-average), 2)).collect(Collectors.toList());
-        var sumAllTerms = sumTerms.stream().mapToDouble(Double::doubleValue).sum();
+        List<Double> sumTerms = ages.stream().map(age -> Math.pow((age-average), 2)).collect(Collectors.toList());
+        Double sumAllTerms = sumTerms.stream().mapToDouble(Double::doubleValue).sum();
 
         return Math.sqrt((sumAllTerms/(ages.size() - 1)));
     }
